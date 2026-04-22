@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAKE NOTE BIBLES</title>
+    <meta
+        name="description"
+        content="TAKE NOTE BIBLES offers clean, modern Bible study editions with a simple purchase flow."
+    >
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+</head>
+<body>
+    <header class="siteHeader">
+        <a href="#home" class="brand" data-tab-target="home">TAKE NOTE BIBLES</a>
+        <button
+            class="navToggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="main-nav"
+        >
+            Menu
+        </button>
+        <nav class="navLinks" id="main-nav" aria-label="Main navigation">
+            <a href="#home" class="navLink isActive" data-tab-target="home">Home</a>
+            <a href="#purchase" class="navLink" data-tab-target="purchase">Purchase</a>
+            <a href="#contact" class="navLink" data-tab-target="contact">Contact Us</a>
+        </nav>
+    </header>
+
+    <main class="pageShell">
+        <section
+            id="home"
+            class="tabPanel homePanel isActive"
+            data-tab-panel="home"
+            aria-label="Home"
+        >
+            <video
+                class="heroVideo"
+                src="hero-video.mp4"
+                autoplay
+                muted
+                loop
+                playsinline
+            ></video>
+            <div class="heroScrim" aria-hidden="true"></div>
+            <div class="heroContent">
+                <p class="heroKicker">KJV Bible Study Editions</p>
+                <h1>TAKE NOTE BIBLES</h1>
+                <div class="heroActions">
+                    <a href="#purchase" class="button" data-tab-target="purchase">Browse Editions</a>
+                    <a href="#contact" class="button buttonSecondary" data-tab-target="contact">Contact Us</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="purchase" class="tabPanel purchasePanel" data-tab-panel="purchase">
+            <div class="sectionShell">
+                <div class="sectionIntro">
+                    <p class="sectionKicker">Purchase</p>
+                    <h2>Choose your Bible study edition.</h2>
+                    <p>
+                        Select your quantity, add the books you want, and continue to checkout when
+                        you are ready.
+                    </p>
+                </div>
+
+                <div class="booksGrid">
+                    <article class="bookCard" data-book="ephesians">
+                        <div
+                            class="bookCover"
+                            style="--cover-start: rgb(38, 70, 83); --cover-end: rgb(224, 188, 101);"
+                            aria-hidden="true"
+                        >
+                            <span class="coverSeries">Take Note</span>
+                            <span class="coverTitle">Ephesians</span>
+                        </div>
+                        <div class="bookBody">
+                            <div class="bookTopline">
+                                <p class="sectionKicker">Bible Edition</p>
+                                <span class="bookPrice">$18.00</span>
+                            </div>
+                            <h3>Ephesians</h3>
+                            <p>
+                                A clean note-taking edition built for personal study, discipleship,
+                                and teaching.
+                            </p>
+                            <div class="quantitySelector" aria-label="Quantity selector for Ephesians">
+                                <button type="button" class="qtyButton" data-qty-change="-1">-</button>
+                                <span class="qtyValue" data-qty-display>1</span>
+                                <button type="button" class="qtyButton" data-qty-change="1">+</button>
+                            </div>
+                            <button type="button" class="button addButton" data-add-to-cart>
+                                Add To Order
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="bookCard" data-book="john">
+                        <div
+                            class="bookCover"
+                            style="--cover-start: rgb(22, 57, 82); --cover-end: rgb(103, 146, 137);"
+                            aria-hidden="true"
+                        >
+                            <span class="coverSeries">Take Note</span>
+                            <span class="coverTitle">John</span>
+                        </div>
+                        <div class="bookBody">
+                            <div class="bookTopline">
+                                <p class="sectionKicker">Bible Edition</p>
+                                <span class="bookPrice">$20.00</span>
+                            </div>
+                            <h3>John</h3>
+                            <p>
+                                Designed for thoughtful reading, verse-by-verse notes, and repeated
+                                study sessions.
+                            </p>
+                            <div class="quantitySelector" aria-label="Quantity selector for John">
+                                <button type="button" class="qtyButton" data-qty-change="-1">-</button>
+                                <span class="qtyValue" data-qty-display>1</span>
+                                <button type="button" class="qtyButton" data-qty-change="1">+</button>
+                            </div>
+                            <button type="button" class="button addButton" data-add-to-cart>
+                                Add To Order
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="bookCard" data-book="romans">
+                        <div
+                            class="bookCover"
+                            style="--cover-start: rgb(74, 50, 91); --cover-end: rgb(214, 161, 91);"
+                            aria-hidden="true"
+                        >
+                            <span class="coverSeries">Take Note</span>
+                            <span class="coverTitle">Romans</span>
+                        </div>
+                        <div class="bookBody">
+                            <div class="bookTopline">
+                                <p class="sectionKicker">Bible Edition</p>
+                                <span class="bookPrice">$20.00</span>
+                            </div>
+                            <h3>Romans</h3>
+                            <p>
+                                A focused format for deeper doctrine study, margin notes, and group
+                                discussion prep.
+                            </p>
+                            <div class="quantitySelector" aria-label="Quantity selector for Romans">
+                                <button type="button" class="qtyButton" data-qty-change="-1">-</button>
+                                <span class="qtyValue" data-qty-display>1</span>
+                                <button type="button" class="qtyButton" data-qty-change="1">+</button>
+                            </div>
+                            <button type="button" class="button addButton" data-add-to-cart>
+                                Add To Order
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="bookCard" data-book="revelation">
+                        <div
+                            class="bookCover"
+                            style="--cover-start: rgb(91, 49, 43); --cover-end: rgb(210, 144, 110);"
+                            aria-hidden="true"
+                        >
+                            <span class="coverSeries">Take Note</span>
+                            <span class="coverTitle">Revelation</span>
+                        </div>
+                        <div class="bookBody">
+                            <div class="bookTopline">
+                                <p class="sectionKicker">Bible Edition</p>
+                                <span class="bookPrice">$20.00</span>
+                            </div>
+                            <h3>Revelation</h3>
+                            <p>
+                                Built for careful note-taking while studying prophecy, themes, and
+                                cross references.
+                            </p>
+                            <div class="quantitySelector" aria-label="Quantity selector for Revelation">
+                                <button type="button" class="qtyButton" data-qty-change="-1">-</button>
+                                <span class="qtyValue" data-qty-display>1</span>
+                                <button type="button" class="qtyButton" data-qty-change="1">+</button>
+                            </div>
+                            <button type="button" class="button addButton" data-add-to-cart>
+                                Add To Order
+                            </button>
+                        </div>
+                    </article>
+
+                    <article class="bookCard" data-book="philippians">
+                        <div
+                            class="bookCover"
+                            style="--cover-start: rgb(48, 62, 104); --cover-end: rgb(188, 152, 98);"
+                            aria-hidden="true"
+                        >
+                            <span class="coverSeries">Take Note</span>
+                            <span class="coverTitle">Philippians</span>
+                        </div>
+                        <div class="bookBody">
+                            <div class="bookTopline">
+                                <p class="sectionKicker">Bible Edition</p>
+                                <span class="bookPrice">$18.00</span>
+                            </div>
+                            <h3>Philippians</h3>
+                            <p>
+                                A joyful study edition designed for rich note-taking, personal growth,
+                                and encouragement in Christ.
+                            </p>
+                            <div class="quantitySelector" aria-label="Quantity selector for Philippians">
+                                <button type="button" class="qtyButton" data-qty-change="-1">-</button>
+                                <span class="qtyValue" data-qty-display>1</span>
+                                <button type="button" class="qtyButton" data-qty-change="1">+</button>
+                            </div>
+                            <button type="button" class="button addButton" data-add-to-cart>
+                                Add To Order
+                            </button>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="purchaseBottom">
+                    <section class="surfaceCard cartCard" aria-labelledby="cart-title">
+                        <div class="panelHeader">
+                            <p class="sectionKicker">Your Order</p>
+                            <h3 id="cart-title">Cart Summary</h3>
+                        </div>
+                        <div id="cart-items" class="cartItems">
+                            <p class="emptyState">Your cart is empty.</p>
+                        </div>
+                        <div class="cartFooter">
+                            <span>Total</span>
+                            <strong id="cart-total">$0.00</strong>
+                        </div>
+                    </section>
+
+                    <form id="order-form" class="surfaceCard orderForm" method="POST">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_subject" id="order-subject">
+                        <input type="hidden" name="_next" id="order-next">
+                        <input type="hidden" name="order_summary" id="order-summary">
+                        <input type="hidden" name="order_total" id="order-total-field">
+                        <input type="hidden" name="order_reference" id="order-reference-field">
+                        <input type="hidden" name="payment_provider" id="payment-provider-field">
+                        <input type="hidden" name="payment_status" id="payment-status-field">
+                        <input type="hidden" name="paypal_order_id" id="paypal-order-id-field">
+                        <input type="hidden" name="paypal_capture_id" id="paypal-capture-id-field">
+                        <input type="hidden" name="paypal_payer_email" id="paypal-payer-email-field">
+                        <input type="hidden" name="paypal_payer_name" id="paypal-payer-name-field">
+
+                        <div class="panelHeader">
+                            <p class="sectionKicker">Checkout</p>
+                            <h3>Customer Details</h3>
+                        </div>
+
+                        <div class="fieldGrid">
+                            <label>
+                                Name
+                                <input type="text" name="name" placeholder="Your full name" required>
+                            </label>
+                            <label>
+                                Email
+                                <input type="email" name="email" placeholder="you@example.com" required>
+                            </label>
+                        </div>
+
+                        <label>
+                            Shipping Address
+                            <input type="text" name="address" placeholder="Street address" required>
+                        </label>
+
+                        <div class="fieldGrid fieldGridTight">
+                            <label>
+                                City
+                                <input type="text" name="city" placeholder="City" required>
+                            </label>
+                            <label>
+                                State
+                                <input type="text" name="state" placeholder="State" required>
+                            </label>
+                            <label>
+                                Zip
+                                <input type="text" name="zip" placeholder="Zip code" required>
+                            </label>
+                        </div>
+
+                        <label>
+                            Order Notes
+                            <textarea
+                                name="notes"
+                                rows="4"
+                                placeholder="Optional notes for your order"
+                            ></textarea>
+                        </label>
+
+                        <p id="checkout-note" class="formNote">
+                            Fill out your details, then pay securely with PayPal below.
+                        </p>
+                        <p id="payment-config-note" class="adminNote" hidden></p>
+                        <p id="paypal-success-note" class="successNote" hidden></p>
+
+                        <div class="paypalSection">
+                            <div id="paypal-button-container" class="paypalButtonContainer"></div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="surfaceCard comingSoonCard">
+                    <p class="sectionKicker">More Coming Soon</p>
+                    <h3>More books of the Bible are on the way.</h3>
+                    <p>
+                        Additional editions can be added to the same purchase flow as soon as they are
+                        ready.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="tabPanel contactPanel" data-tab-panel="contact">
+            <div class="sectionShell contactLayout">
+                <div class="contactCopy">
+                    <p class="sectionKicker">Contact Us</p>
+                    <h2>Let us know how we can help.</h2>
+                    <p>
+                        Questions about an order, bulk copies, or upcoming releases can all come
+                        through here.
+                    </p>
+                    <div class="surfaceCard contactDetails">
+                        <p class="detailLabel">Email</p>
+                        <a id="contact-email" href="mailto:info@takenotebibles.com">
+                            info@takenotebibles.com
+                        </a>
+                    </div>
+                </div>
+
+                <form id="contact-form" class="surfaceCard contactForm" method="POST">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_subject" value="New TAKE NOTE BIBLES contact form message">
+
+                    <label>
+                        Name
+                        <input type="text" name="name" placeholder="Your name" required>
+                    </label>
+                    <label>
+                        Email
+                        <input type="email" name="email" placeholder="you@example.com" required>
+                    </label>
+                    <label>
+                        Message
+                        <textarea
+                            name="message"
+                            rows="6"
+                            placeholder="Write your message here"
+                            required
+                        ></textarea>
+                    </label>
+                    <button type="submit" class="button">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <iframe name="order-email-target" id="order-email-target" class="hiddenFrame" title="Order email submission target"></iframe>
+
+    <script src="script.js"></script>
+</body>
+</html>

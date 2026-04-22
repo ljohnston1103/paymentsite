@@ -12,13 +12,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"
     >
 </head>
 <body>
     <header class="siteHeader">
-        <a href="#home" class="brand" data-tab-target="home">TAKE NOTE BIBLES</a>
+        <a href="#home" class="brand" data-tab-target="home" aria-label="Take Note Bibles home">
+            <img
+                class="brandLogo"
+                src="logo.png"
+                alt="Take Note Bibles"
+                width="2816"
+                height="1536"
+            >
+            <span class="srOnly">Take Note Bibles</span>
+        </a>
         <button
             class="navToggle"
             type="button"
@@ -51,24 +60,63 @@
             ></video>
             <div class="heroScrim" aria-hidden="true"></div>
             <div class="heroContent">
-                <p class="heroKicker">KJV Bible Study Editions</p>
-                <h1>TAKE NOTE BIBLES</h1>
-                <div class="heroActions">
-                    <a href="#purchase" class="button" data-tab-target="purchase">Browse Editions</a>
-                    <a href="#contact" class="button buttonSecondary" data-tab-target="contact">Contact Us</a>
+                <div class="heroCopy">
+                    <p class="heroKicker">KJV Bible Study Editions</p>
+                    <h1>TAKE NOTE BIBLES</h1>
+                    <p class="heroBlurb">
+                        Clean, modern Bible study editions with a simple purchase flow.
+                    </p>
+                    <div class="heroActions">
+                        <a href="#purchase" class="button" data-tab-target="purchase">Browse Editions</a>
+                        <a href="#contact" class="button buttonSecondary" data-tab-target="contact">Contact Us</a>
+                    </div>
                 </div>
+
+                <aside class="heroSpotlight surfaceCard" aria-label="Brand highlight">
+                    <p class="sectionKicker">Built For Study</p>
+                    <h3>Made to be marked up, revisited, and taught from.</h3>
+                    <p>
+                        Thoughtful layouts for personal study, discipleship, teaching, and repeated
+                        reading.
+                    </p>
+                    <div class="heroMeta">
+                        <div class="heroMetaItem">
+                            <span>Current Editions</span>
+                            <strong>5 Books</strong>
+                        </div>
+                        <div class="heroMetaItem">
+                            <span>Checkout</span>
+                            <strong>PayPal Secure</strong>
+                        </div>
+                        <div class="heroMetaItem">
+                            <span>Format</span>
+                            <strong>KJV Study</strong>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </section>
 
         <section id="purchase" class="tabPanel purchasePanel" data-tab-panel="purchase">
             <div class="sectionShell">
-                <div class="sectionIntro">
-                    <p class="sectionKicker">Purchase</p>
-                    <h2>Choose your Bible study edition.</h2>
-                    <p>
-                        Select your quantity, add the books you want, and continue to checkout when
-                        you are ready.
-                    </p>
+                <div class="sectionIntroRow">
+                    <div class="sectionIntro">
+                        <p class="sectionKicker">Purchase</p>
+                        <h2>Choose your Bible study edition.</h2>
+                        <p>
+                            Select your quantity, add the books you want, and continue to checkout when
+                            you are ready.
+                        </p>
+                    </div>
+
+                    <aside class="surfaceCard purchaseNote">
+                        <p class="sectionKicker">Simple Checkout</p>
+                        <h3>Build one order across every available edition.</h3>
+                        <p>
+                            Adjust quantities, review your cart, and complete payment securely with
+                            PayPal when your order is ready.
+                        </p>
+                    </aside>
                 </div>
 
                 <div class="booksGrid">
@@ -224,19 +272,40 @@
                 </div>
 
                 <div class="purchaseBottom">
-                    <section class="surfaceCard cartCard" aria-labelledby="cart-title">
-                        <div class="panelHeader">
-                            <p class="sectionKicker">Your Order</p>
-                            <h3 id="cart-title">Cart Summary</h3>
+                    <div class="checkoutRail">
+                        <section class="surfaceCard cartCard" aria-labelledby="cart-title">
+                            <div class="panelHeader">
+                                <p class="sectionKicker">Your Order</p>
+                                <h3 id="cart-title">Cart Summary</h3>
+                            </div>
+                            <div id="cart-items" class="cartItems">
+                                <p class="emptyState">Your cart is empty.</p>
+                            </div>
+                            <div class="cartFooter">
+                                <div class="cartFooterRow">
+                                    <span>Subtotal</span>
+                                    <strong id="cart-subtotal">$0.00</strong>
+                                </div>
+                                <div class="cartFooterRow cartFooterDiscount" id="cart-discount-row" hidden>
+                                    <span id="cart-discount-label">Promo Discount</span>
+                                    <strong id="cart-discount">-$0.00</strong>
+                                </div>
+                                <div class="cartFooterRow cartFooterTotal">
+                                    <span>Total</span>
+                                    <strong id="cart-total">$0.00</strong>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="surfaceCard comingSoonCard">
+                            <p class="sectionKicker">More Coming Soon</p>
+                            <h3>More books of the Bible are on the way.</h3>
+                            <p>
+                                Additional editions can be added to the same purchase flow as soon as they are
+                                ready.
+                            </p>
                         </div>
-                        <div id="cart-items" class="cartItems">
-                            <p class="emptyState">Your cart is empty.</p>
-                        </div>
-                        <div class="cartFooter">
-                            <span>Total</span>
-                            <strong id="cart-total">$0.00</strong>
-                        </div>
-                    </section>
+                    </div>
 
                     <form id="order-form" class="surfaceCard orderForm" method="POST">
                         <input type="hidden" name="_captcha" value="false">
@@ -245,6 +314,8 @@
                         <input type="hidden" name="_next" id="order-next">
                         <input type="hidden" name="order_summary" id="order-summary">
                         <input type="hidden" name="order_total" id="order-total-field">
+                        <input type="hidden" name="promo_code" id="promo-code-field">
+                        <input type="hidden" name="discount_amount" id="discount-amount-field">
                         <input type="hidden" name="order_reference" id="order-reference-field">
                         <input type="hidden" name="payment_provider" id="payment-provider-field">
                         <input type="hidden" name="payment_status" id="payment-status-field">
@@ -298,6 +369,27 @@
                             ></textarea>
                         </label>
 
+                        <div class="promoSection" aria-labelledby="promo-title">
+                            <div class="promoHeader">
+                                <p class="sectionKicker">Promo Code</p>
+                                <h4 class="promoTitle" id="promo-title"><span></span></h4>
+                            </div>
+                            <div class="promoInputRow">
+                                <input
+                                    type="text"
+                                    id="promo-code-input"
+                                    placeholder="Enter promo code"
+                                    autocomplete="off"
+                                    autocapitalize="characters"
+                                    spellcheck="false"
+                                >
+                                <button type="button" class="button promoButton" id="apply-promo-button">
+                                    Apply Code
+                                </button>
+                            </div>
+                            <p id="promo-feedback" class="promoFeedback" hidden></p>
+                        </div>
+
                         <p id="checkout-note" class="formNote">
                             Fill out your details, then pay securely with PayPal below.
                         </p>
@@ -308,15 +400,6 @@
                             <div id="paypal-button-container" class="paypalButtonContainer"></div>
                         </div>
                     </form>
-                </div>
-
-                <div class="surfaceCard comingSoonCard">
-                    <p class="sectionKicker">More Coming Soon</p>
-                    <h3>More books of the Bible are on the way.</h3>
-                    <p>
-                        Additional editions can be added to the same purchase flow as soon as they are
-                        ready.
-                    </p>
                 </div>
             </div>
         </section>

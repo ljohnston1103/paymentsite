@@ -8,6 +8,12 @@ const storefrontConfig = {
         intent: "CAPTURE",
         enableFunding: ["venmo", "paylater", "card"],
     },
+    promoCodes: {
+        AGAPE: {
+            code: "AGAPE",
+            discountPercent: 10,
+        },
+    },
     products: {
         ephesians: { name: "Ephesians", price: 18.0 },
         john: { name: "John", price: 20.0 },
@@ -18,11 +24,13 @@ const storefrontConfig = {
 };
 
 const cartStorageKey = "take-note-bibles-cart";
+const promoStorageKey = "take-note-bibles-promo";
 const quantityState = Object.fromEntries(
     Object.keys(storefrontConfig.products).map((bookId) => [bookId, 1]),
 );
 
 let cart = loadCart();
+let appliedPromoCode = loadPromoCode();
 let toastTimeout = 0;
 let paypalScriptPromise = null;
 let paypalButtonActions = null;
@@ -33,6 +41,10 @@ const navLinks = document.querySelectorAll(".navLink");
 const tabPanels = document.querySelectorAll("[data-tab-panel]");
 const booksGrid = document.querySelector(".booksGrid");
 const cartItemsElement = document.getElementById("cart-items");
+const cartSubtotalElement = document.getElementById("cart-subtotal");
+const cartDiscountRow = document.getElementById("cart-discount-row");
+const cartDiscountLabelElement = document.getElementById("cart-discount-label");
+const cartDiscountElement = document.getElementById("cart-discount");
 const cartTotalElement = document.getElementById("cart-total");
 const orderForm = document.getElementById("order-form");
 const contactForm = document.getElementById("contact-form");
@@ -40,6 +52,8 @@ const orderSubjectField = document.getElementById("order-subject");
 const orderNextField = document.getElementById("order-next");
 const orderSummaryField = document.getElementById("order-summary");
 const orderTotalField = document.getElementById("order-total-field");
+const promoCodeField = document.getElementById("promo-code-field");
+const discountAmountField = document.getElementById("discount-amount-field");
 const orderReferenceField = document.getElementById("order-reference-field");
 const paymentProviderField = document.getElementById("payment-provider-field");
 const paymentStatusField = document.getElementById("payment-status-field");
@@ -47,6 +61,9 @@ const paypalOrderIdField = document.getElementById("paypal-order-id-field");
 const paypalCaptureIdField = document.getElementById("paypal-capture-id-field");
 const paypalPayerEmailField = document.getElementById("paypal-payer-email-field");
 const paypalPayerNameField = document.getElementById("paypal-payer-name-field");
+const promoCodeInput = document.getElementById("promo-code-input");
+const applyPromoButton = document.getElementById("apply-promo-button");
+const promoFeedback = document.getElementById("promo-feedback");
 const checkoutNote = document.getElementById("checkout-note");
 const paymentConfigNote = document.getElementById("payment-config-note");
 const paypalSuccessNote = document.getElementById("paypal-success-note");
@@ -72,6 +89,32 @@ function saveCart() {
     }
 }
 
+function loadPromoCode() {
+    try {
+        const savedCode = (window.sessionStorage.getItem(promoStorageKey) || "").trim().toUpperCase();
+        return storefrontConfig.promoCodes[savedCode] ? savedCode : "";
+    } catch (error) {
+        return "";
+    }
+}
+
+function savePromoCode() {
+    try {
+        if (appliedPromoCode) {
+            window.sessionStorage.setItem(promoStorageKey, appliedPromoCode);
+            return;
+        }
+
+        window.sessionStorage.removeItem(promoStorageKey);
+    } catch (error) {
+        // Ignore storage failures so promo codes still work locally.
+    }
+}
+
+function roundCurrency(value) {
+    return Math.round(value * 100) / 100;
+}
+
 function formatCurrency(value) {
     return new Intl.NumberFormat("en-US", {
         style: "currency",
@@ -79,8 +122,26 @@ function formatCurrency(value) {
     }).format(value);
 }
 
-function cartTotal() {
+function cartSubtotal() {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+}
+
+function currentPromo() {
+    return storefrontConfig.promoCodes[appliedPromoCode] || null;
+}
+
+function cartDiscount() {
+    const promo = currentPromo();
+
+    if (!promo || cart.length === 0) {
+        return 0;
+    }
+
+    return roundCurrency((cartSubtotal() * promo.discountPercent) / 100);
+}
+
+function cartTotal() {
+    return roundCurrency(Math.max(0, cartSubtotal() - cartDiscount()));
 }
 
 function paypalIsConfigured() {
@@ -162,6 +223,8 @@ function syncQuantityDisplays() {
 
 function clearPaymentFields() {
     orderReferenceField.value = "";
+    promoCodeField.value = "";
+    discountAmountField.value = "";
     paymentProviderField.value = "";
     paymentStatusField.value = "";
     paypalOrderIdField.value = "";
@@ -170,19 +233,79 @@ function clearPaymentFields() {
     paypalPayerNameField.value = "";
 }
 
+function syncPromoInput() {
+    promoCodeInput.value = appliedPromoCode;
+}
+
+function setPromoFeedback(message = "", type = "") {
+    promoFeedback.classList.remove("isSuccess", "isError");
+
+    if (!message) {
+        promoFeedback.hidden = true;
+        promoFeedback.textContent = "";
+        return;
+    }
+
+    promoFeedback.hidden = false;
+    promoFeedback.textContent = message;
+
+    if (type === "success") {
+        promoFeedback.classList.add("isSuccess");
+        return;
+    }
+
+    if (type === "error") {
+        promoFeedback.classList.add("isError");
+    }
+}
+
 function syncOrderSummaryFields(reference = "") {
+    const promo = currentPromo();
+    const discount = cartDiscount();
     const total = cartTotal();
-    orderSummaryField.value = cart
-        .map((item) => `${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}`)
-        .join("\n");
+    const summaryLines = cart.map(
+        (item) => `${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}`,
+    );
+
+    if (promo && discount > 0) {
+        summaryLines.push(`Promo ${promo.code} (-${promo.discountPercent}%) - -${formatCurrency(discount)}`);
+    }
+
+    if (summaryLines.length > 0) {
+        summaryLines.push(`Total - ${formatCurrency(total)}`);
+    }
+
+    orderSummaryField.value = summaryLines.join("\n");
     orderTotalField.value = formatCurrency(total);
+    promoCodeField.value = promo ? promo.code : "";
+    discountAmountField.value = discount > 0 ? formatCurrency(discount) : "";
     orderReferenceField.value = reference;
+}
+
+function renderCartTotals() {
+    const promo = currentPromo();
+    const subtotal = cartSubtotal();
+    const discount = cartDiscount();
+
+    cartSubtotalElement.textContent = formatCurrency(subtotal);
+    cartTotalElement.textContent = formatCurrency(cartTotal());
+
+    if (promo && discount > 0) {
+        cartDiscountRow.hidden = false;
+        cartDiscountLabelElement.textContent = `${promo.code} (-${promo.discountPercent}%)`;
+        cartDiscountElement.textContent = `-${formatCurrency(discount)}`;
+        return;
+    }
+
+    cartDiscountRow.hidden = true;
+    cartDiscountLabelElement.textContent = "Promo Discount";
+    cartDiscountElement.textContent = `-${formatCurrency(0)}`;
 }
 
 function renderCart() {
     if (cart.length === 0) {
         cartItemsElement.innerHTML = '<p class="emptyState">Your cart is empty.</p>';
-        cartTotalElement.textContent = formatCurrency(0);
+        renderCartTotals();
         syncOrderSummaryFields("");
         saveCart();
         updatePayPalButtonState();
@@ -207,7 +330,7 @@ function renderCart() {
         .join("");
 
     cartItemsElement.innerHTML = html;
-    cartTotalElement.textContent = formatCurrency(cartTotal());
+    renderCartTotals();
     syncOrderSummaryFields(currentOrderReference);
     saveCart();
     updatePayPalButtonState();
@@ -292,6 +415,45 @@ function addToCart(bookId) {
     showToast(`${product.name} added to your order.`);
 }
 
+function applyPromoCode() {
+    const enteredCode = promoCodeInput.value.trim().toUpperCase();
+
+    if (!enteredCode) {
+        const hadPromoCode = Boolean(appliedPromoCode);
+
+        appliedPromoCode = "";
+        savePromoCode();
+        syncPromoInput();
+        renderCart();
+        setPromoFeedback(
+            hadPromoCode ? "Promo code removed." : "Enter a promo code to apply.",
+            hadPromoCode ? "success" : "error",
+        );
+
+        if (hadPromoCode) {
+            showToast("Promo code removed.");
+        }
+
+        return;
+    }
+
+    const promo = storefrontConfig.promoCodes[enteredCode];
+
+    if (!promo) {
+        setPromoFeedback("That promo code is not valid.", "error");
+        showToast("Promo code not recognized.");
+        return;
+    }
+
+    appliedPromoCode = promo.code;
+    savePromoCode();
+    syncPromoInput();
+    paypalSuccessNote.hidden = true;
+    renderCart();
+    setPromoFeedback(`${promo.code} applied. ${promo.discountPercent}% off your order total.`, "success");
+    showToast(`${promo.code} applied for ${promo.discountPercent}% off.`);
+}
+
 function removeFromCart(bookId) {
     cart = cart.filter((item) => item.id !== bookId);
     renderCart();
@@ -363,6 +525,9 @@ function handleCartClick(event) {
 }
 
 function buildPayPalOrderPayload() {
+    const subtotal = cartSubtotal();
+    const discount = cartDiscount();
+
     currentOrderReference = buildOrderReference();
     syncOrderSummaryFields(currentOrderReference);
 
@@ -379,8 +544,16 @@ function buildPayPalOrderPayload() {
                     breakdown: {
                         item_total: {
                             currency_code: storefrontConfig.paypal.currency,
-                            value: cartTotal().toFixed(2),
+                            value: subtotal.toFixed(2),
                         },
+                        ...(discount > 0
+                            ? {
+                                  discount: {
+                                      currency_code: storefrontConfig.paypal.currency,
+                                      value: discount.toFixed(2),
+                                  },
+                              }
+                            : {}),
                     },
                 },
                 items: cart.map((item) => ({
@@ -435,11 +608,15 @@ function submitPaidOrderEmail(approvalData, captureDetails) {
 
 function resetCheckoutAfterPayment(captureId) {
     cart = [];
+    appliedPromoCode = "";
     saveCart();
+    savePromoCode();
     renderCart();
     clearPaymentFields();
     currentOrderReference = "";
     orderForm.reset();
+    syncPromoInput();
+    setPromoFeedback();
     orderNextField.value = currentReturnUrl();
     paypalSuccessNote.hidden = false;
     paypalSuccessNote.textContent = captureId
@@ -559,6 +736,7 @@ document.addEventListener("DOMContentLoaded", () => {
     syncFormTargets();
     syncQuantityDisplays();
     clearPaymentFields();
+    syncPromoInput();
     renderCart();
     updateCheckoutMessaging();
     initializeNav();
@@ -569,6 +747,18 @@ document.addEventListener("DOMContentLoaded", () => {
     orderForm.addEventListener("submit", handleManualOrderSubmit);
     orderForm.addEventListener("input", updatePayPalButtonState);
     orderForm.addEventListener("change", updatePayPalButtonState);
+    promoCodeInput.addEventListener("input", () => {
+        setPromoFeedback();
+    });
+    promoCodeInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") {
+            return;
+        }
+
+        event.preventDefault();
+        applyPromoCode();
+    });
+    applyPromoButton.addEventListener("click", applyPromoCode);
 
     setActiveTab(activeTabFromHash(), {
         updateHash: false,

@@ -1,7 +1,7 @@
 // PayPal funds settle into the account tied to the client ID below.
 // Paste your live PayPal REST app client ID before publishing.
 const storefrontConfig = {
-    orderEmail: "admin@takenotebibles.com",
+    orderEmail: "admin@notetakerbibles.com",
     paypal: {
         clientId: "AbQCzoYIbysAc4zkiX7T5hHgfdvK6KeKw5pKDpW1UUYZlzZU9_uu0zvCe4HwmWbSdyIdgf5o3L837Ixq",
         currency: "USD",

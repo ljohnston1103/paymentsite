@@ -70,6 +70,14 @@ const paypalSuccessNote = document.getElementById("paypal-success-note");
 const paypalButtonContainer = document.getElementById("paypal-button-container");
 const contactEmailLink = document.getElementById("contact-email");
 const toast = document.getElementById("toast");
+const reviewOrder = document.getElementById("review-order");
+const motionBehavior = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+
+function updateOrderShortcut() {
+    const count = cart.reduce((total, item) => total + item.quantity, 0);
+    reviewOrder.hidden = count === 0 || !document.getElementById("purchase").classList.contains("isActive");
+    reviewOrder.textContent = `Review order (${count}) · ${formatCurrency(cartTotal())}`;
+}
 
 function loadCart() {
     try {
@@ -217,7 +225,15 @@ function syncQuantityDisplays() {
 
         if (display) {
             display.textContent = String(quantityState[bookId] || 1);
+            display.setAttribute("aria-live", "polite");
         }
+        const name = storefrontConfig.products[bookId].name;
+        card.querySelectorAll("[data-qty-change]").forEach((button) => {
+            const decrease = Number(button.dataset.qtyChange) < 0;
+            button.setAttribute("aria-label", `${decrease ? "Decrease" : "Increase"} ${name} quantity`);
+            button.disabled = decrease && quantityState[bookId] <= 1;
+        });
+        card.querySelector("[data-add-to-cart]").setAttribute("aria-label", `Add ${name} to order`);
     });
 }
 
@@ -283,6 +299,7 @@ function syncOrderSummaryFields(reference = "") {
 }
 
 function renderCartTotals() {
+    updateOrderShortcut();
     const promo = currentPromo();
     const subtotal = cartSubtotal();
     const discount = cartDiscount();
@@ -323,7 +340,7 @@ function renderCart() {
                         <span class="cartQuantity">Quantity: ${item.quantity}</span>
                     </div>
                     <span class="cartLineTotal">${formatCurrency(lineTotal)}</span>
-                    <button type="button" class="removeButton" data-remove-book="${item.id}">Remove</button>
+                    <button type="button" class="removeButton" data-remove-book="${item.id}" aria-label="Remove ${item.name} from order">Remove</button>
                 </div>
             `;
         })
@@ -472,24 +489,31 @@ function setActiveTab(tabId, options = {}) {
     });
 
     navLinks.forEach((link) => {
-        link.classList.toggle("isActive", link.dataset.tabTarget === tabId);
+        const active = link.dataset.tabTarget === tabId;
+        link.classList.toggle("isActive", active);
+        if (active) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
     });
 
     document.body.classList.remove("navOpen");
     navToggle.setAttribute("aria-expanded", "false");
 
     if (updateHash && window.location.hash !== `#${tabId}`) {
-        window.history.replaceState(null, "", `#${tabId}`);
+        window.history.pushState(null, "", `#${tabId}`);
     }
 
     if (scrollToTop) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        const heading = targetPanel.querySelector("h1, h2");
+        heading?.setAttribute("tabindex", "-1");
+        heading?.focus({ preventScroll: true });
+        window.scrollTo({ top: 0, behavior: motionBehavior() });
     }
+    updateOrderShortcut();
 }
 
 function activeTabFromHash() {
     const hash = window.location.hash.replace("#", "");
-    return document.querySelector(`[data-tab-panel="${hash}"]`) ? hash : "home";
+    return [...tabPanels].some((panel) => panel.dataset.tabPanel === hash) ? hash : "home";
 }
 
 function handleBookGridClick(event) {
@@ -724,7 +748,27 @@ function initializeNav() {
         navToggle.setAttribute("aria-expanded", String(isOpen));
     });
 
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && document.body.classList.contains("navOpen")) {
+            document.body.classList.remove("navOpen");
+            navToggle.setAttribute("aria-expanded", "false");
+            navToggle.focus();
+        }
+    });
+    document.addEventListener("pointerdown", (event) => {
+        if (!event.target.closest(".siteHeader")) {
+            document.body.classList.remove("navOpen");
+            navToggle.setAttribute("aria-expanded", "false");
+        }
+    });
+    reviewOrder.addEventListener("click", () => {
+        const summary = document.getElementById("cart-title");
+        summary.focus({ preventScroll: true });
+        summary.scrollIntoView({ behavior: motionBehavior(), block: "start" });
+    });
+
     window.addEventListener("hashchange", () => {
+        if (![...tabPanels].some((panel) => `#${panel.dataset.tabPanel}` === window.location.hash)) return;
         setActiveTab(activeTabFromHash(), {
             updateHash: false,
             scrollToTop: false,

@@ -1344,3 +1344,28 @@ textarea:focus {
         transition-duration: 1ms !important;
     }
 }
+
+/* Easier keyboard navigation and a clear route from books to the order. */
+html { scroll-padding-top:110px; }
+.skipLink { position:fixed; top:-80px; left:20px; z-index:100; padding:14px 20px; background:#f1ce82; color:#18241e; font-weight:800; border-radius:6px; }
+.skipLink:focus { top:20px; }
+.reviewOrder { position:fixed; right:24px; bottom:24px; z-index:25; min-height:48px; padding:14px 22px; border:1px solid #f1ce82; border-radius:30px; background:#183e34; color:#fffdf6; box-shadow:0 8px 30px #14251d33; font:inherit; font-weight:800; cursor:pointer; }
+.reviewOrder[hidden] { display:none; }
+.reviewOrder:hover { background:#285346; }
+.reviewOrder:focus-visible { outline:3px solid #e0bc65; outline-offset:4px; }
+.qtyButton { min-width:44px; min-height:44px; }
+.qtyButton:disabled { opacity:.4; cursor:default; }
+.purchasePanel { padding-bottom:110px; }
+#cart-title { scroll-margin-top:16px; }
+.navLinks { max-height:calc(100dvh - 90px); overflow-y:auto; }
+@media (max-width:680px) {
+  .navToggle, .navLink { min-height:44px; }
+  .reviewOrder { right:16px; bottom:16px; left:16px; }
+  input, select, textarea { font-size:16px; }
+  .bookCard { border-radius:16px; }
+  .toast { bottom:84px; }
+}
+[hidden] { display:none !important; }
+@media (max-width:780px) {
+  body::before, .purchasePanel::before, .contactPanel::before, .contactPanel::after { animation:none; }
+}

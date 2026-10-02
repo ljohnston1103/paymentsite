@@ -17,6 +17,7 @@
     >
 </head>
 <body>
+    <a class="skipLink" href="#main-content">Skip to content</a>
     <header class="siteHeader">
         <a href="#home" class="brand" data-tab-target="home" aria-label="Take Note Bibles home">
             <img
@@ -43,7 +44,7 @@
         </nav>
     </header>
 
-    <main class="pageShell">
+    <main class="pageShell" id="main-content" tabindex="-1">
         <section
             id="home"
             class="tabPanel homePanel isActive"
@@ -276,7 +277,7 @@
                         <section class="surfaceCard cartCard" aria-labelledby="cart-title">
                             <div class="panelHeader">
                                 <p class="sectionKicker">Your Order</p>
-                                <h3 id="cart-title">Cart Summary</h3>
+                                <h3 id="cart-title" tabindex="-1">Cart Summary</h3>
                             </div>
                             <div id="cart-items" class="cartItems">
                                 <p class="emptyState">Your cart is empty.</p>
@@ -332,31 +333,31 @@
                         <div class="fieldGrid">
                             <label>
                                 Name
-                                <input type="text" name="name" placeholder="Your full name" required>
+                                <input type="text" name="name" autocomplete="name" placeholder="Your full name" required>
                             </label>
                             <label>
                                 Email
-                                <input type="email" name="email" placeholder="you@example.com" required>
+                                <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
                             </label>
                         </div>
 
                         <label>
                             Shipping Address
-                            <input type="text" name="address" placeholder="Street address" required>
+                            <input type="text" name="address" autocomplete="street-address" placeholder="Street address" required>
                         </label>
 
                         <div class="fieldGrid fieldGridTight">
                             <label>
                                 City
-                                <input type="text" name="city" placeholder="City" required>
+                                <input type="text" name="city" autocomplete="address-level2" placeholder="City" required>
                             </label>
                             <label>
                                 State
-                                <input type="text" name="state" placeholder="State" required>
+                                <input type="text" name="state" autocomplete="address-level1" placeholder="State" required>
                             </label>
                             <label>
                                 Zip
-                                <input type="text" name="zip" placeholder="Zip code" required>
+                                <input type="text" name="zip" autocomplete="postal-code" placeholder="Zip code" required>
                             </label>
                         </div>
 
@@ -428,11 +429,11 @@
 
                     <label>
                         Name
-                        <input type="text" name="name" placeholder="Your name" required>
+                        <input type="text" name="name" autocomplete="name" placeholder="Your name" required>
                     </label>
                     <label>
                         Email
-                        <input type="email" name="email" placeholder="you@example.com" required>
+                        <input type="email" name="email" autocomplete="email" placeholder="you@example.com" required>
                     </label>
                     <label>
                         Message
@@ -449,6 +450,7 @@
         </section>
     </main>
 
+    <button type="button" class="reviewOrder" id="review-order" hidden>Review your order</button>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <iframe name="order-email-target" id="order-email-target" class="hiddenFrame" title="Order email submission target"></iframe>
 
